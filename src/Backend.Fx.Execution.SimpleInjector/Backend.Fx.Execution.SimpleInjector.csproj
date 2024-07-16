@@ -20,8 +20,8 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="Backend.Fx.Execution" Version="1.0.6" />
-    <PackageReference Include="SimpleInjector" Version="5.4.4" />
+    <PackageReference Include="Backend.Fx.Execution" Version="1.0.11" />
+    <PackageReference Include="SimpleInjector" Version="5.4.6" />
 	<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
   </ItemGroup>
   
