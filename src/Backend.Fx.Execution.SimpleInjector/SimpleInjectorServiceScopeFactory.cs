@@ -1,20 +1,20 @@
 using Microsoft.Extensions.DependencyInjection;
-using SimpleInjector;
 using SimpleInjector.Lifestyles;
 
 namespace Backend.Fx.Execution.SimpleInjector
 {
     public class SimpleInjectorServiceScopeFactory : IServiceScopeFactory
     {
-        private readonly Container _container;
-
-        public SimpleInjectorServiceScopeFactory(Container container)
+        private readonly SimpleInjectorCompositionRoot _compositionRoot;
+        
+        public SimpleInjectorServiceScopeFactory(SimpleInjectorCompositionRoot compositionRoot)
         {
-            _container = container;
+            _compositionRoot = compositionRoot;
         }
+        
         public IServiceScope CreateScope()
         {
-            return new SimpleInjectorServiceScope(AsyncScopedLifestyle.BeginScope(_container));
+            return new SimpleInjectorServiceScope(AsyncScopedLifestyle.BeginScope(_compositionRoot.Container));
         }
     }
 }
