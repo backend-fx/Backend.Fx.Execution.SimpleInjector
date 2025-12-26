@@ -42,7 +42,7 @@ namespace Backend.Fx.Execution.SimpleInjector
             Container.Options.DefaultScopedLifestyle = scopedLifestyle;
 
             // required to support extension method IServiceProvider.CreateScope() 
-            Container.RegisterInstance<IServiceScopeFactory>(new SimpleInjectorServiceScopeFactory(Container));
+            Container.RegisterInstance<IServiceScopeFactory>(new SimpleInjectorServiceScopeFactory(this));
         }
 
         public ScopedLifestyle ScopedLifestyle { get; }
@@ -105,13 +105,13 @@ namespace Backend.Fx.Execution.SimpleInjector
         /// <inheritdoc />
         public override IServiceScope BeginScope()
         {
-            return Container.CreateScope();
+            return new SimpleInjectorServiceScope(AsyncScopedLifestyle.BeginScope(Container));
         }
 
         public override IServiceProvider ServiceProvider => Container;
 
         /// <summary>
-        ///     A behavior that defaults to scoped life style for injected instances
+        ///     A behavior that defaults to scoped lifestyle for injected instances
         /// </summary>
         private class ScopedLifestyleBehavior : ILifestyleSelectionBehavior
         {
