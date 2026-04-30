@@ -22,7 +22,7 @@
   <ItemGroup>
     <PackageReference Include="Backend.Fx.Execution" Version="1.1.8" />
     <PackageReference Include="SimpleInjector" Version="5.5.2" />
-	<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.203" PrivateAssets="All" />
   </ItemGroup>
   
 </Project>
