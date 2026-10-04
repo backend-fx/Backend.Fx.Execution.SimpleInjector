@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Backend.Fx.Execution.DependencyInjection;
 using Backend.Fx.Logging;
 using JetBrains.Annotations;
@@ -190,6 +191,11 @@ namespace Backend.Fx.Execution.SimpleInjector
             {
                 Container.Dispose();
             }
+        }
+
+        protected override async ValueTask DisposeAsyncCore()
+        {
+            await Container.DisposeContainerAsync();
         }
 
         #endregion
