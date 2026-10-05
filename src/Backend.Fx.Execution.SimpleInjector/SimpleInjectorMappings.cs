@@ -10,10 +10,14 @@ namespace Backend.Fx.Execution.SimpleInjector
         {
             switch (serviceLifetime)
             {
-                case ServiceLifetime.Scoped: return Lifestyle.Scoped;
-                case ServiceLifetime.Singleton: return Lifestyle.Singleton;
-                case ServiceLifetime.Transient: return Lifestyle.Transient;
-                default: throw new ArgumentException($"Unknown ServiceLifetime {serviceLifetime}");
+                case ServiceLifetime.Scoped:
+                    return Lifestyle.Scoped;
+                case ServiceLifetime.Singleton:
+                    return Lifestyle.Singleton;
+                case ServiceLifetime.Transient:
+                    return Lifestyle.Transient;
+                default:
+                    throw new ArgumentException($"Unknown ServiceLifetime {serviceLifetime}");
             }
         }
     }
