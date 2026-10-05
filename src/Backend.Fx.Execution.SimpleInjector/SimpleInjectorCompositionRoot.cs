@@ -22,19 +22,19 @@ namespace Backend.Fx.Execution.SimpleInjector
         private readonly ILogger _logger = Log.Create<SimpleInjectorCompositionRoot>();
         private readonly IList<ServiceDescriptor> _services = new List<ServiceDescriptor>();
         private readonly IList<ServiceDescriptor> _decorators = new List<ServiceDescriptor>();
-        private readonly IList<ServiceDescriptor[]> _serviceCollections = new List<ServiceDescriptor[]>();
+        private readonly IList<ServiceDescriptor[]> _serviceCollections =
+            new List<ServiceDescriptor[]>();
 
         /// <summary>
         /// This constructor creates a composition root that prefers scoped lifestyle
         /// </summary>
         public SimpleInjectorCompositionRoot()
-            : this(new ScopedLifestyleBehavior(), new AsyncScopedLifestyle())
-        {
-        }
+            : this(new ScopedLifestyleBehavior(), new AsyncScopedLifestyle()) { }
 
         public SimpleInjectorCompositionRoot(
             ILifestyleSelectionBehavior lifestyleBehavior,
-            ScopedLifestyle scopedLifestyle)
+            ScopedLifestyle scopedLifestyle
+        )
         {
             _logger.LogInformation("Initializing SimpleInjector");
             ScopedLifestyle = scopedLifestyle;
@@ -42,8 +42,10 @@ namespace Backend.Fx.Execution.SimpleInjector
             Container.Options.LifestyleSelectionBehavior = lifestyleBehavior;
             Container.Options.DefaultScopedLifestyle = scopedLifestyle;
 
-            // required to support extension method IServiceProvider.CreateScope() 
-            Container.RegisterInstance<IServiceScopeFactory>(new SimpleInjectorServiceScopeFactory(this));
+            // required to support extension method IServiceProvider.CreateScope()
+            Container.RegisterInstance<IServiceScopeFactory>(
+                new SimpleInjectorServiceScopeFactory(this)
+            );
         }
 
         public ScopedLifestyle ScopedLifestyle { get; }
@@ -56,10 +58,16 @@ namespace Backend.Fx.Execution.SimpleInjector
         {
             if (Container.IsLocked)
             {
-                throw new InvalidOperationException("Container has been built and cannot be changed any more.");
+                throw new InvalidOperationException(
+                    "Container has been built and cannot be changed any more."
+                );
             }
 
-            foreach (var descriptor in _services.Where(sd => sd.ServiceType == serviceDescriptor.ServiceType).ToArray())
+            foreach (
+                var descriptor in _services
+                    .Where(sd => sd.ServiceType == serviceDescriptor.ServiceType)
+                    .ToArray()
+            )
             {
                 _services.Remove(descriptor);
             }
@@ -71,7 +79,9 @@ namespace Backend.Fx.Execution.SimpleInjector
         {
             if (Container.IsLocked)
             {
-                throw new InvalidOperationException("Container has been built and cannot be changed any more.");
+                throw new InvalidOperationException(
+                    "Container has been built and cannot be changed any more."
+                );
             }
 
             _decorators.Add(serviceDescriptor);
@@ -81,15 +91,19 @@ namespace Backend.Fx.Execution.SimpleInjector
         {
             if (Container.IsLocked)
             {
-                throw new InvalidOperationException("Container has been built and cannot be changed any more.");
+                throw new InvalidOperationException(
+                    "Container has been built and cannot be changed any more."
+                );
             }
 
-            var serviceDescriptorArray = serviceDescriptors as ServiceDescriptor[] ?? serviceDescriptors.ToArray();
+            var serviceDescriptorArray =
+                serviceDescriptors as ServiceDescriptor[] ?? serviceDescriptors.ToArray();
 
             if (serviceDescriptorArray.Select(sd => sd.ServiceType).Distinct().Count() > 1)
             {
                 throw new InvalidOperationException(
-                    "To register a collection of services they must implement the same service type");
+                    "To register a collection of services they must implement the same service type"
+                );
             }
 
             _serviceCollections.Add(serviceDescriptorArray);
@@ -132,20 +146,26 @@ namespace Backend.Fx.Execution.SimpleInjector
                     Container.Register(
                         serviceDescriptor.ServiceType,
                         serviceDescriptor.ImplementationType,
-                        serviceDescriptor.Lifetime.MapLifestyle());
+                        serviceDescriptor.Lifetime.MapLifestyle()
+                    );
                 }
                 else if (serviceDescriptor.ImplementationFactory != null)
                 {
                     Container.Register(
                         serviceDescriptor.ServiceType,
                         () => serviceDescriptor.ImplementationFactory(Container),
-                        serviceDescriptor.Lifetime.MapLifestyle());
+                        serviceDescriptor.Lifetime.MapLifestyle()
+                    );
                 }
-                else if (serviceDescriptor.ImplementationInstance != null &&
-                         serviceDescriptor.Lifetime == ServiceLifetime.Singleton)
+                else if (
+                    serviceDescriptor.ImplementationInstance != null
+                    && serviceDescriptor.Lifetime == ServiceLifetime.Singleton
+                )
                 {
-                    Container.RegisterInstance(serviceDescriptor.ServiceType,
-                        serviceDescriptor.ImplementationInstance);
+                    Container.RegisterInstance(
+                        serviceDescriptor.ServiceType,
+                        serviceDescriptor.ImplementationInstance
+                    );
                 }
                 else
                 {
@@ -160,7 +180,8 @@ namespace Backend.Fx.Execution.SimpleInjector
                     Container.RegisterDecorator(
                         serviceDescriptor.ServiceType,
                         serviceDescriptor.ImplementationType,
-                        serviceDescriptor.Lifetime.MapLifestyle());
+                        serviceDescriptor.Lifetime.MapLifestyle()
+                    );
                 }
                 else
                 {
@@ -174,9 +195,13 @@ namespace Backend.Fx.Execution.SimpleInjector
                 {
                     Container.Collection.Append(
                         serviceDescriptor.ServiceType,
-                        serviceDescriptor.ImplementationType ??
-                        throw new ArgumentException("You must provide an implementationType when registering a collection", nameof(serviceDescriptor)),
-                        serviceDescriptor.Lifetime.MapLifestyle());
+                        serviceDescriptor.ImplementationType
+                            ?? throw new ArgumentException(
+                                "You must provide an implementationType when registering a collection",
+                                nameof(serviceDescriptor)
+                            ),
+                        serviceDescriptor.Lifetime.MapLifestyle()
+                    );
                 }
             }
         }

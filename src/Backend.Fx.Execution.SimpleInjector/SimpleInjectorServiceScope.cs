@@ -15,7 +15,6 @@ namespace Backend.Fx.Execution.SimpleInjector
 
         public IServiceProvider ServiceProvider => _scope.Container;
 
-
         public void Dispose()
         {
             _scope.Dispose();
